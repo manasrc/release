@@ -13,5 +13,8 @@ jobs:
       - name: Set up source
         uses: actions/checkout@v4
 
+      - name: Set up version
+        run: echo "VERSION=$(awk -F\" '/^version =/ {print $2}' Cargo.toml)" >> $GITHUB_ENV
+
       - run: cargo build --release
-      - run: ./target/release/release ${{ github.repository }} 0.0.0 ${{ github.sha }}
+      - run: ./target/release/release ${{ github.repository }} ${{ env.VERSION }} ${{ github.sha }}

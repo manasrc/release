@@ -1,8 +1,11 @@
 use octocrab::params::repos::Reference::Tag;
+use octocrab::Octocrab;
 use std::process::ExitCode;
 
 #[tokio::main]
 async fn main() -> std::process::ExitCode {
+    let token = std::env::var("GITHUB_TOKEN").expect("GITHUB_TOKEN env variable is required");
+
     let args: Vec<String> = std::env::args().collect();
 
     if args.len() < 4 {
@@ -22,7 +25,14 @@ async fn main() -> std::process::ExitCode {
     let version = &args[2];
     let sha = &args[3];
 
-    let octocrab = octocrab::instance();
+    let octocrab = Octocrab::builder().personal_token(token).build();
+    let octocrab = match octocrab {
+        Ok(octocrab) => octocrab,
+        Err(_) => {
+            println!("Error instanciating the builder");
+            return ExitCode::FAILURE;
+        }
+    };
 
     let reference = octocrab
         .repos(owner.to_string(), repository.to_string())
