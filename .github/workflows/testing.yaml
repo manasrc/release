@@ -1,0 +1,17 @@
+name: testing 
+
+on:
+  push:
+    branches:
+      - testing 
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Set up source
+        uses: actions/checkout@v4
+
+      - run: cargo build --release
+      - run: ./target/release/release ${{ github.repository }} 0.0.0 ${{ github.sha }}
