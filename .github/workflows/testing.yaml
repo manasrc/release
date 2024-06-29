@@ -6,7 +6,7 @@ on:
       - testing 
 
 jobs:
-  docker:
+  testing:
     runs-on: ubuntu-latest
     steps:
 
